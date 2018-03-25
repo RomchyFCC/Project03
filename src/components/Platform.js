@@ -10,7 +10,7 @@ class Platform extends Component {
         <ul>
           {Roles[faction].map((item, index) => {
             if (this.props.possibleRoles.includes(item)) {
-              return <li className={this.props.usedRoles.includes(item) ? 'used' : ' '} onClick={this.props.toggler} key={faction + index} >{item}</li>
+              return <li className={this.props.allRoles.includes(item) ? ' ' : 'used'} onClick={this.props.toggler} key={faction + index} >{item}</li>
             }
             return null;
           })}

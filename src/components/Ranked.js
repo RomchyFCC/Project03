@@ -11,7 +11,8 @@ class Ranked extends Component {
     this.state = {
       roles: ['Jailor', 'Town Investigative', 'Town Investigative', 'Town Protective', 'Town Killing', 'Town Support', 'Random Town', 'Random Town', 'Random Town', 'Godfather', 'Mafioso', 'Random Mafia', 'Random Mafia', 'Neutral Evil', 'Neutral Killing'],
       usedRoles: [],
-      possibleRoles: []
+      possibleRoles: [],
+      allRoles: [],
     }
   }
   componentWillMount() {
@@ -69,7 +70,7 @@ class Ranked extends Component {
   render() {
     return(
       <div className="game">
-        <Platform usedRoles={this.state.usedRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
+        <Platform allRoles={this.state.allRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
         <div className="display">
           <ul>
             {this.state.roles.map((item, key) => {

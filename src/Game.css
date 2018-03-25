@@ -1,5 +1,6 @@
-.cross-off {
+.cross-off, .used {
   text-decoration: underline;
+  color: red;
 }
 .game {
   display: grid;

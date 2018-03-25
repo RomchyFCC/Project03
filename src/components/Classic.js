@@ -11,7 +11,8 @@ class Classic extends Component {
     this.state = {
       roles: ['Sheriff', 'Doctor', 'Investigator', 'Jailor', 'Medium', 'Godfather', 'Framer', 'Executioner', 'Escort', 'Mafioso', 'Lookout', 'Serial Killer', 'Town Killing', 'Jester', 'Random Town'],
       usedRoles: [],
-      possibleRoles: []
+      possibleRoles: [],
+      allRoles: []
     }
   }
   componentWillMount() {
@@ -28,55 +29,120 @@ class Classic extends Component {
     })
     possibleRoles.sort();
     let uniqueArr = [];
+    let allRoles = [];
     for (let i = 0; i < possibleRoles.length; i++) {
       if (possibleRoles[i] !== possibleRoles[i+1]) {
         uniqueArr.push(possibleRoles[i]);
       }
+      if (!Roles.uniqueRoles.includes(possibleRoles[i])) {
+        allRoles.push(possibleRoles[i]);
+      } else if (Roles.uniqueRoles.includes(possibleRoles[i]) && !allRoles.includes(possibleRoles[i])){
+        allRoles.push(possibleRoles[i]);
+      }
     }
     this.setState({
       possibleRoles: uniqueArr,
+      allRoles: possibleRoles
     })
   }
   toggleRole(e){
-    const item = e.target.innerHTML;
+    let item = e.target.innerHTML;
     const state = this.state;
-    // if the role not used but in the game
-    if (!state.usedRoles.includes(item) && state.roles.includes(item)) {
-      this.setState({
-        usedRoles: this.state.usedRoles.concat(item)
-      })
-    // if the role used
-    } else {
-      // if role = town and usedRoles doesn't have random town and its not unique
-      if (Roles.town.includes(item) && !state.usedRoles.includes('Random Town') && !Roles.uniqueRoles.includes(item)) {
-        this.setState({
-          usedRoles: state.usedRoles.concat('Random Town')
-        })
-      // if role = town killing and town killing is not in usedRoles and the role is not unique
-      } else if (Roles.townKilling.includes(item) && !state.usedRoles.includes('Town Killing') && !Roles.uniqueRoles.includes(item)) {
-        this.setState({
-          usedRoles: state.usedRoles.concat('Town Killing')
-        })
-      // if the role has been used and the array of used roles already containcs random town then remove the clicked role  
+
+    // if not used yet
+    if (!state.usedRoles.includes(item)) {
+      // if role = predetermined
+      if (state.roles.includes(item)) {
+        // if role is unique
+        if (Roles.uniqueRoles.includes(item)) {
+          this.setState({
+            allRoles: state.allRoles.filter(role => (role !== item)),
+            usedRoles: state.usedRoles.concat(item)
+          }) 
+        // if role isn't unique
+        } else {
+          state.allRoles.splice(this.state.allRoles.indexOf(item), 1);
+          this.setState({
+            allRoles: state.allRoles,
+            usedRoles: state.usedRoles.concat(item)
+          })
+        }
+      // if role isn't predetermined
       } else {
-        state.usedRoles.splice(state.usedRoles.indexOf(item), 1)
-        this.setState({
-          usedRoles: state.usedRoles
-        })
+        // if role is unique
+        if (Roles.uniqueRoles.includes(item)) {
+          // if role is town killing or random town
+          if (!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
+
+            Roles.townKilling.forEach(role => {
+              if (state.allRoles.includes(role)) {
+                state.allRoles.splice(state.allRoles.indexOf(role), 1)
+              }
+            })
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Town Killing')
+            })
+
+          } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
+            Roles.town.forEach(role => {
+              if (state.allRoles.includes(role)) {
+                state.allRoles.splice(state.allRoles.indexOf(role), 1)
+              }
+            })
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Random Town')
+            })
+          }
+           
+        // if role isn't unique
+        } else {
+
+          // if TK wasnt used yet and the role is in the TK array
+          if (!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
+            
+            Roles.townKilling.forEach(role => {
+              if (state.allRoles.includes(role)) {
+                state.allRoles.splice(state.allRoles.indexOf(role), 1)
+              }
+            })
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Town Killing')
+            })
+
+          // if RT wasn't used yet and the role is included in RT array
+          } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
+            Roles.town.forEach(role => {
+              if (state.allRoles.includes(role)) {
+                state.allRoles.splice(state.allRoles.indexOf(role), 1)
+              }
+            })
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Random Town')
+            })
+          }
+        }
       }
+
+    // if used already
+    } else {
+      // TO DO
     }
   }
   render() {
     return(
       <div className="game">
-        <Platform usedRoles={this.state.usedRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
+        <Platform allRoles={this.state.allRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
         <div className="display">
           <ul>
             {this.state.roles.map((item, key) => {
               if (this.state.usedRoles.includes(item)) {
-                return <li className="cross-off" key={key}>{item}</li>
+                return <li className="cross-off" key={key}>{item}<input placeholder={item} /></li>
               } else {
-                return <li key={key}>{item}</li>
+                return <li key={key}>{item}<input placeholder={item} /></li>
               }
             })}
           </ul>
