@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Platform from './Platform';
 import Roles from './Roles';
+import Functions from './Functions';
 
 import '../Game.css';
 
@@ -17,32 +18,28 @@ class Classic extends Component {
   }
   componentWillMount() {
     const roles = this.state.roles;
-    const possibleRoles = this.state.possibleRoles;
-    roles.map(item => {
-      if (item === 'Random Town') {
-        return possibleRoles.push(...Roles.town)
-      } else if (item === 'Town Killing') {
-        return possibleRoles.push(...Roles.townKilling)
-      } else {
-        return possibleRoles.push(item)
-      }
-    })
+    const possibleRoles = [];
+    Functions.setup(roles, possibleRoles);
     possibleRoles.sort();
+    // create a unique array to display it
     let uniqueArr = [];
-    let allRoles = [];
     for (let i = 0; i < possibleRoles.length; i++) {
       if (possibleRoles[i] !== possibleRoles[i+1]) {
         uniqueArr.push(possibleRoles[i]);
-      }
-      if (!Roles.uniqueRoles.includes(possibleRoles[i])) {
-        allRoles.push(possibleRoles[i]);
-      } else if (Roles.uniqueRoles.includes(possibleRoles[i]) && !allRoles.includes(possibleRoles[i])){
-        allRoles.push(possibleRoles[i]);
       }
     }
     this.setState({
       possibleRoles: uniqueArr,
       allRoles: possibleRoles
+    })
+  }
+  resetState() {
+    const roles = this.state.roles;
+    const possibleRoles = [];
+    Functions.setup(roles, possibleRoles);
+    this.setState({
+      allRoles: possibleRoles,
+      usedRoles: []
     })
   }
   toggleRole(e){
@@ -73,23 +70,14 @@ class Classic extends Component {
         if (Roles.uniqueRoles.includes(item)) {
           // if role is town killing or random town
           if (!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
-
-            Roles.townKilling.forEach(role => {
-              if (state.allRoles.includes(role)) {
-                state.allRoles.splice(state.allRoles.indexOf(role), 1)
-              }
-            })
+            Functions.determine('townKilling', state);
             this.setState({
               allRoles: state.allRoles.filter(role => (role !== item)),
               usedRoles: state.usedRoles.concat(item, 'Town Killing')
             })
 
           } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
-            Roles.town.forEach(role => {
-              if (state.allRoles.includes(role)) {
-                state.allRoles.splice(state.allRoles.indexOf(role), 1)
-              }
-            })
+            Functions.determine('town', state);
             this.setState({
               allRoles: state.allRoles.filter(role => (role !== item)),
               usedRoles: state.usedRoles.concat(item, 'Random Town')
@@ -98,15 +86,9 @@ class Classic extends Component {
            
         // if role isn't unique
         } else {
-
           // if TK wasnt used yet and the role is in the TK array
           if (!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
-            
-            Roles.townKilling.forEach(role => {
-              if (state.allRoles.includes(role)) {
-                state.allRoles.splice(state.allRoles.indexOf(role), 1)
-              }
-            })
+            Functions.determine('townKilling', state);
             this.setState({
               allRoles: state.allRoles,
               usedRoles: state.usedRoles.concat(item, 'Town Killing')
@@ -114,11 +96,7 @@ class Classic extends Component {
 
           // if RT wasn't used yet and the role is included in RT array
           } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
-            Roles.town.forEach(role => {
-              if (state.allRoles.includes(role)) {
-                state.allRoles.splice(state.allRoles.indexOf(role), 1)
-              }
-            })
+            Functions.determine('town', state);
             this.setState({
               allRoles: state.allRoles,
               usedRoles: state.usedRoles.concat(item, 'Random Town')
@@ -129,13 +107,27 @@ class Classic extends Component {
 
     // if used already
     } else {
-      // TO DO
+      if (!Roles.uniqueRoles.includes(item)) {
+        if(!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
+          Functions.determine('townKilling', state);
+          this.setState({
+            allRoles: state.allRoles,
+            usedRoles: state.usedRoles.concat(item, 'Town Killing')
+          })
+        } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
+          Functions.determine('town', state);
+          this.setState({
+            allRoles: state.allRoles,
+            usedRoles: state.usedRoles.concat(item, 'Random Town')
+          })
+        }
+      } 
     }
   }
   render() {
     return(
       <div className="game">
-        <Platform allRoles={this.state.allRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
+        <Platform allRoles={this.state.allRoles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
         <div className="display">
           <ul>
             {this.state.roles.map((item, key) => {
@@ -147,6 +139,7 @@ class Classic extends Component {
             })}
           </ul>
         </div>
+        <button onClick={this.resetState.bind(this)}>Reset</button>
       </div>
     )
   }

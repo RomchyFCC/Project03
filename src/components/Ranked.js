@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Platform from './Platform';
 import Roles from './Roles';
+import Functions from './Functions';
 
 import '../Game.css';
 
@@ -17,17 +18,10 @@ class Ranked extends Component {
   }
   componentWillMount() {
     const roles = this.state.roles;
-    const possibleRoles = this.state.possibleRoles;
-    roles.map(item => {
-      if (item === 'Random Town') {
-        return possibleRoles.push(...Roles.town)
-      } else if (item === 'Town Killing') {
-        return possibleRoles.push(...Roles.townKilling)
-      } else {
-        return possibleRoles.push(item)
-      }
-    })
+    const possibleRoles = [];
+    Functions.setup(roles, possibleRoles);
     possibleRoles.sort();
+    // create a unique array to display it
     let uniqueArr = [];
     for (let i = 0; i < possibleRoles.length; i++) {
       if (possibleRoles[i] !== possibleRoles[i+1]) {
@@ -36,52 +30,220 @@ class Ranked extends Component {
     }
     this.setState({
       possibleRoles: uniqueArr,
+      allRoles: possibleRoles
+    })
+  }
+  resetState() {
+    const roles = this.state.roles;
+    const possibleRoles = [];
+    Functions.setup(roles, possibleRoles);
+    this.setState({
+      allRoles: possibleRoles,
+      usedRoles: []
     })
   }
   toggleRole(e){
-    const item = e.target.innerHTML;
+    let item = e.target.innerHTML;
     const state = this.state;
-    // if the role not used but in the game
-    if (!state.usedRoles.includes(item) && state.roles.includes(item)) {
-      this.setState({
-        usedRoles: this.state.usedRoles.concat(item)
-      })
-    // if the role used
-    } else {
-      // if role = town and usedRoles doesn't have random town and its not unique
-      if (Roles.town.includes(item) && !state.usedRoles.includes('Random Town') && !Roles.uniqueRoles.includes(item)) {
-        this.setState({
-          usedRoles: state.usedRoles.concat('Random Town')
-        })
-      // if role = town killing and town killing is not in usedRoles and the role is not unique
-      } else if (Roles.townKilling.includes(item) && !state.usedRoles.includes('Town Killing') && !Roles.uniqueRoles.includes(item)) {
-        this.setState({
-          usedRoles: state.usedRoles.concat('Town Killing')
-        })
-      // if the role has been used and the array of used roles already containcs random town then remove the clicked role  
+
+    // if not used yet
+    if (!state.usedRoles.includes(item)) {
+      // if role = predetermined
+      if (state.roles.includes(item)) {
+        // if role is unique
+        if (Roles.uniqueRoles.includes(item)) {
+          this.setState({
+            allRoles: state.allRoles.filter(role => (role !== item)),
+            usedRoles: state.usedRoles.concat(item)
+          }) 
+        // if role isn't unique
+        } else {
+          state.allRoles.splice(this.state.allRoles.indexOf(item), 1);
+          this.setState({
+            allRoles: state.allRoles,
+            usedRoles: state.usedRoles.concat(item)
+          })
+        }
+      // if role isn't predetermined
       } else {
-        state.usedRoles.splice(state.usedRoles.indexOf(item), 1)
-        this.setState({
-          usedRoles: state.usedRoles
-        })
+        // if role is unique
+        if (Roles.uniqueRoles.includes(item)) {
+          // if role is town killing or random town
+          if (!state.usedRoles.includes('Town Killing') && Roles.townKilling.includes(item)) {
+            Functions.determine('townKilling', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Town Killing')
+            })
+
+          } else if (!state.usedRoles.includes('Town Investigative') && Roles.townInvestigative.includes(item)) {
+            Functions.determine('townInvestigative', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Town Investigative')
+            })
+          } else if (!state.usedRoles.includes('Town Protective') && Roles.townProtective.includes(item)) {
+            Functions.determine('townProtective', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Town Protective')
+            })
+          } else if (!state.usedRoles.includes('Town Support') && Roles.townSupport.includes(item)) {
+            Functions.determine('townSupport', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Town Support')
+            })
+          } else if (!state.usedRoles.includes('Random Town') && Roles.town.includes(item)) {
+            Functions.determine('town', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Random Town')
+            })
+          } else if (!state.usedRoles.includes('Random Mafia') && Roles.mafia.includes(item)) {
+            Functions.determine('mafia', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Random Mafia')
+            })
+          } else if (!state.usedRoles.includes('Neutral Evil') && Roles.neutralEvil.includes(item)) {
+            Functions.determine('neutralEvil', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Neutral Evil')
+            })
+          } else if (!state.usedRoles.includes('Neutral Killing') && Roles.neutralKilling.includes(item)) {
+            Functions.determine('neutralKilling', state);
+            this.setState({
+              allRoles: state.allRoles.filter(role => (role !== item)),
+              usedRoles: state.usedRoles.concat(item, 'Neutral Killing')
+            })
+          }
+           
+        // if role isn't unique
+        } else {
+          // if TK wasnt used yet and the role is in the TK array
+          if (Functions.count(state.usedRoles, state.roles, 'Town Killing') && Roles.townKilling.includes(item)) {
+            Functions.determine('townKilling', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Town Killing')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Town Investigative') && Roles.townInvestigative.includes(item)) {
+            Functions.determine('townInvestigative', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Town Investigative')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Town Protective') && Roles.townProtective.includes(item)) {
+            Functions.determine('townProtective', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Town Protective')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Town Support') && Roles.townSupport.includes(item)) {
+            Functions.determine('townSupport', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Town Support')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Random Town') && Roles.town.includes(item)) {
+            Functions.determine('town', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Random Town')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Random Mafia') && Roles.mafia.includes(item)) {
+            Functions.determine('mafia', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Random Mafia')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Neutral Evil') && Roles.neutralEvil.includes(item)) {
+            Functions.determine('neutralEvil', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Neutral Evil')
+            })
+          } else if (Functions.count(state.usedRoles, state.roles, 'Neutral Killing') && Roles.neutralKilling.includes(item)) {
+            Functions.determine('neutralKilling', state);
+            this.setState({
+              allRoles: state.allRoles,
+              usedRoles: state.usedRoles.concat(item, 'Neutral Killing')
+            })
+          }
+        }
       }
+
+    // if used already
+    } else {
+      if (Functions.count(state.usedRoles, state.roles, 'Town Killing') && Roles.townKilling.includes(item)) {
+        Functions.determine('townKilling', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Town Killing')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Town Investigative') && Roles.townInvestigative.includes(item)) {
+        Functions.determine('townInvestigative', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Town Investigative')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Town Protective') && Roles.townProtective.includes(item)) {
+        Functions.determine('townProtective', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Town Protective')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Town Support') && Roles.townSupport.includes(item)) {
+        Functions.determine('townSupport', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Town Support')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Random Town') && Roles.town.includes(item)) {
+        Functions.determine('town', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Random Town')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Random Mafia') && Roles.mafia.includes(item)) {
+        Functions.determine('mafia', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Random Mafia')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Neutral Evil') && Roles.neutralEvil.includes(item)) {
+        Functions.determine('neutralEvil', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Neutral Evil')
+        })
+      } else if (Functions.count(state.usedRoles, state.roles, 'Neutral Killing') && Roles.neutralKilling.includes(item)) {
+        Functions.determine('neutralKilling', state);
+        this.setState({
+          allRoles: state.allRoles,
+          usedRoles: state.usedRoles.concat(item, 'Neutral Killing')
+        })
+      } 
     }
   }
   render() {
     return(
       <div className="game">
-        <Platform allRoles={this.state.allRoles} roles={this.state.roles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
+        <Platform allRoles={this.state.allRoles} possibleRoles={this.state.possibleRoles} toggler={this.toggleRole.bind(this)} />       
         <div className="display">
           <ul>
             {this.state.roles.map((item, key) => {
               if (this.state.usedRoles.includes(item)) {
-                return <li className="cross-off" key={key}>{item}</li>
+                return <li className={Functions.compare(this.state.usedRoles, this.state.roles, item) ? "cross-off" : " "} key={key}>{item}<input placeholder={item} /></li>
               } else {
-                return <li key={key}>{item}</li>
+                return <li key={key}>{item}<input placeholder={item} /></li>
               }
             })}
           </ul>
         </div>
+        <button onClick={this.resetState.bind(this)}>Reset</button>
       </div>
     )
   }
