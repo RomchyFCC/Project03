@@ -52,7 +52,6 @@ const Functions = {
     }
   },
   compare: function(arr1, arr2, item) {
-    console.log(arr1,arr2,item);
     let count1 = 0;
     let count2 = 0;
     arr1.forEach(role => {

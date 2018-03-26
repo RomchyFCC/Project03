@@ -4,9 +4,17 @@
 }
 .game {
   display: grid;
-  grid-template-columns: 1fr 200px;
+  grid-template-columns: 2fr 1fr;
+  background: linear-gradient(rgba(17, 17, 31, 0.9),rgba(22, 22, 39, 0.9)), url('./images/background.jpg');
 }
 .platform {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 40vh 22vh 22vh;
+}
+.town ul, .mafia ul, .neutral ul {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 90%;
+  align-content: flex-start;
 }

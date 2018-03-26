@@ -236,9 +236,9 @@ class Ranked extends Component {
           <ul>
             {this.state.roles.map((item, key) => {
               if (this.state.usedRoles.includes(item)) {
-                return <li className={Functions.compare(this.state.usedRoles, this.state.roles, item) ? "cross-off" : " "} key={key}>{item}<input placeholder={item} /></li>
+                return <li className={Functions.compare(this.state.usedRoles, this.state.roles, item) ? "cross-off" : " "} key={key}>{item + ' - '}<input placeholder={item} /></li>
               } else {
-                return <li key={key}>{item}<input placeholder={item} /></li>
+                return <li key={key}>{item + ' - '}<input placeholder={item} /></li>
               }
             })}
           </ul>
