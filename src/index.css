@@ -2,10 +2,21 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  text-transform: uppercase;
 }
 body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   background: url('./images/wood.jpg');
+}
+.wrapper {
+  padding: 5px;
+}
+.window {
+  border: 2px solid black;
+  border-top: none;
+}
+.buttons {
+  border-bottom: 2px solid black
 }
 
 li {
@@ -16,12 +27,69 @@ li {
   padding: 10px;
   background: url('./images/wood.jpg');
   width: 20%;
+  min-width: 200px;
+  font-weight: 700;
 }
+
 .display li {
-  width: 100%
+  width: 100%;
+  min-width: 420px;
 }
 
 button {
   background: url('./images/wood.jpg');
   padding: 10px 20px;
+  border: 3px solid blacK;
+  border-bottom: 2px solid black;
+  outline: none;
+  color: white;
+  font-weight: 700;
+
+}
+
+input {
+  outline: none;
+  border: none;
+  background: rgba(22,22,22, 0.7);
+  font-size: 17px;
+  font-weight: 700;
+  color: white;
+  text-transform: none;
+  width: 175px;
+}
+
+.platform li:active, .game button:active {
+  background: linear-gradient(rgba(17, 17, 31, 0.7),rgba(22, 22, 39, 0.75)), url('./images/wood.jpg');
+}
+.game button {
+  font-size: 18px;
+  border: 2px solid black;
+  position: absolute;
+  right: 5px;
+  top: 54px;
+  height: 40px;
+  z-index: 1;
+}
+
+.display ul {
+  padding: 20px;
+}
+.header img {
+  display: block;
+  margin: 0 auto;
+}
+.footer {
+  text-align: center;
+  color: white;
+  padding: 5px;
+}
+.footer a {
+  color: rgb(20, 236, 20);
+  text-decoration: none;
+}
+
+@media screen and (max-width: 1400px) {
+  .display li {
+    min-width: 250px;
+  }
 }

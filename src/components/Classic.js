@@ -132,9 +132,9 @@ class Classic extends Component {
           <ul>
             {this.state.roles.map((item, key) => {
               if (this.state.usedRoles.includes(item)) {
-                return <li className="cross-off" key={key}>{item + ' - '}<input placeholder={item} /></li>
+                return <li className="cross-off" key={key}>{item + '  '}<input placeholder="Player" /></li>
               } else {
-                return <li key={key}>{item + ' - '}<input placeholder={item} /></li>
+                return <li key={key}>{item + '  '}<input placeholder="Player" /></li>
               }
             })}
           </ul>

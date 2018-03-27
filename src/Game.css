@@ -1,20 +1,134 @@
 .cross-off, .used {
-  text-decoration: underline;
-  color: red;
+  background: linear-gradient(rgba(17, 17, 31, 0.7),rgba(22, 22, 39, 0.75)), url('./images/wood.jpg');
 }
+
+.notice {
+  background: linear-gradient(rgba(17, 17, 31, 0.9),rgba(22, 22, 39, 0.9)), url('./images/background.jpg');
+  color: white;
+  padding: 50px;
+}
+.notice p {
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+button.used {
+  background: rgb(34, 36, 51);
+  border: 2px solid black;
+  border-bottom: none;
+  padding-bottom: 12px;
+}
+
 .game {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 3fr 1fr;
   background: linear-gradient(rgba(17, 17, 31, 0.9),rgba(22, 22, 39, 0.9)), url('./images/background.jpg');
 }
+
 .platform {
   display: grid;
-  grid-template-rows: 40vh 22vh 22vh;
+  grid-template-rows: 38vh 24vh 22vh;
 }
+
+.faction-header {
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+}
+
+.town, .town li {
+  color: rgb(20, 236, 20);
+}
+
+.mafia, .mafia li {
+  color: rgb(255, 0, 0);
+  text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+}
+
+.neutral, .neutral li {
+  color: rgb(163, 163, 163);
+}
+
 .town ul, .mafia ul, .neutral ul {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   height: 90%;
   align-content: flex-start;
+}
+
+button {
+  height: 100%;
+  grid-column: 1/3;
+}
+
+.town, .mafia, .neutral {
+  overflow: scroll;
+  overflow-x: hidden;
+  margin: 10px;
+  background: rgba(17, 17, 31, 0.5);
+}
+.town::-webkit-scrollbar, .mafia::-webkit-scrollbar, .neutral::-webkit-scrollbar {
+  background: transparent;
+}
+button, .town li, .mafia li, .neutral li {
+  cursor: pointer;
+}
+
+li.cross-off, li.used {
+  color: rgb(85, 85, 85);
+}
+.town ul{
+  height: 300px;
+}
+.mafia ul {
+  height: 160px;
+}
+.neutral ul {
+  height: 120px;
+}
+
+
+
+@media screen and (max-width: 1400px) {
+  .platform {
+    grid-template-rows: 360px 250px 200px;
+  }
+}
+@media screen and (max-width: 1210px) {
+  .platform {
+    grid-template-rows: 460px 300px 250px;
+  }
+  .town ul{
+    height: 400px;
+  }
+  .mafia ul {
+    height: 220px;
+  }
+  .neutral ul {
+    height: 160px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .town, .mafia, .neutral {
+    overflow-y: scroll;
+  }
+  .town::-webkit-scrollbar, .mafia::-webkit-scrollbar, .neutral::-webkit-scrollbar {
+    background: transparent;
+  }
+  .game {
+    grid-template-columns: 1fr 300px;
+  }
+  .town ul{
+    height: 530px;
+  }
+  .mafia ul {
+    height: 320px;
+  }
+  .neutral ul {
+    height: 220px;
+  }
+  .platform li {
+    width: 45%;
+  }
 }

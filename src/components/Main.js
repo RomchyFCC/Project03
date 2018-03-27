@@ -11,22 +11,19 @@ class Main extends Component {
   }
   clickHandler(e){
     const mode = e.target.innerHTML.toLowerCase();
-
-    if (mode === 'classic') {
-      this.setState({
-        mode
-      })
-    } else {
-      this.setState({
-        mode
-      })
-    }
+    this.setState({
+      mode
+    })
   }
   render() {
     return(
       <div className="main">
-        <button onClick={this.clickHandler.bind(this)} >Classic</button>
-        <button onClick={this.clickHandler.bind(this)} >Ranked</button>
+        <div className="buttons">
+          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'classic' ? 'used' : ' '} >Classic</button>
+          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'ranked' ? 'used' : ' '}>Ranked</button>
+          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'will' ? 'used' : ' '}>Will</button>
+          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'info' ? 'used' : ' '}>Info</button>
+        </div>
         <Button className="view" mode={this.state.mode} ></Button>
       </div>
     )

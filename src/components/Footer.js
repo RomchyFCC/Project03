@@ -4,7 +4,8 @@ class Footer extends Component {
   render() {
     return(
       <div className="footer">
-        <p>Romchy made this</p>
+        <p>This is an unofficial application to use with Town of Salem. This is not a part of Blank Media Games.</p>
+        <p>Made by <a href="https://www.romanstruna.com">Roman Struna</a></p>
       </div>
     )
   }
