@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import '../Game.css';
 
-class Will extends Component {
+class Wills extends Component {
   render() {
     return(
       <div className="notice">
@@ -38,4 +38,4 @@ class Will extends Component {
   }
 }
 
-export default Will;
+export default Wills;

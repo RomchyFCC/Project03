@@ -1,5 +1,6 @@
 {
   "name": "townofsalem",
+  "homepage": "https://www.romanstruna.com/townofsalemfilter",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -12,6 +12,14 @@
   max-width: 500px;
 }
 
+.notice a {
+  color: rgb(20, 236, 20);
+  text-decoration: none;
+}
+.notice a:hover {
+  color: rgb(255, 174, 0);
+}
+
 button.used {
   background: rgb(34, 36, 51);
   border: 2px solid black;

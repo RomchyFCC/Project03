@@ -21,7 +21,7 @@ class Main extends Component {
         <div className="buttons">
           <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'classic' ? 'used' : ' '} >Classic</button>
           <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'ranked' ? 'used' : ' '}>Ranked</button>
-          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'will' ? 'used' : ' '}>Will</button>
+          <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'wills' ? 'used' : ' '}>Wills</button>
           <button onClick={this.clickHandler.bind(this)} className={this.state.mode === 'info' ? 'used' : ' '}>Info</button>
         </div>
         <Button className="view" mode={this.state.mode} ></Button>

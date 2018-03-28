@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Classic from './Classic';
 import Ranked from './Ranked';
 import Info from './Info';
-import Will from './Will';
+import Wills from './Wills';
 
 class Button extends Component {
   modeSelect(mode) {
@@ -13,8 +13,8 @@ class Button extends Component {
       return <Ranked />
     } else if (mode === 'info') {
       return <Info />
-    } else if (mode === 'will') {
-      return <Will />
+    } else if (mode === 'wills') {
+      return <Wills />
     }
   }
   
